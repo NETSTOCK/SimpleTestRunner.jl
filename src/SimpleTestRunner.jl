@@ -1,4 +1,4 @@
-module TestRunner
+module SimpleTestRunner
 
 using Test
 
@@ -77,4 +77,4 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
     end
 end
 
-end # module TestRunner
+end # module SimpleTestRunner

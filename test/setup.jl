@@ -1,2 +1,2 @@
-using TestRunner
+using SimpleTestRunner
 using Test

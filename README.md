@@ -1,4 +1,4 @@
-# TestRunner
+# SimpleTestRunner
 
 Provides a `runtests()` function that does most of the work of a Julia project's `test/runtests.jl`:
 
@@ -33,7 +33,7 @@ If `test/setup.jl` contains the following:
 
 ```julia
 using MyPackage
-using TestRunner
+using SimpleTestRunner
 ```
 
 And `test/runtests.jl` contains the following:

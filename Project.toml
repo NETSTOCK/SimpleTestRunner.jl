@@ -1,4 +1,4 @@
-name = "TestRunner"
+name = "SimpleTestRunner"
 uuid = "4aa1efa8-8c96-46dc-bb17-447ab531c4bc"
 authors = ["Sheldon Hearn <sheldon.hearn@netstock.co>"]
 version = "0.1.0"
