@@ -18,7 +18,7 @@ function test_names(dir::String)
             push!(tests, name)
         end
     end
-    return tests    
+    return tests
 end
 
 function program_or_caller()
