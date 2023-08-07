@@ -22,7 +22,7 @@ function test_names(dir::String)
 end
 
 function program_or_caller()
-    isempty(PROGRAM_FILE) ? String(stacktrace()[4].file) : PROGRAM_FILE
+    isinteractive() || isempty(PROGRAM_FILE) ? String(stacktrace()[4].file) : PROGRAM_FILE
 end
 
 function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=program_or_caller())
