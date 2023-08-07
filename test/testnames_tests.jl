@@ -14,7 +14,7 @@
                 end
             end
 
-            names = test_names("test")
+            names = testnames("test")
             expected_names = ["foo", "bar", "baz", "child/alice", "child/bob", "child/grandchild/carol"]
             for expected in expected_names
                 @test expected in names

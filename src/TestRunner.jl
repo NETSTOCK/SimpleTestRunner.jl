@@ -2,7 +2,7 @@ module TestRunner
 
 using Test
 
-export test_names, testprogram, runtests
+export runtests, testnames, testprogram
 
 """
     testprogram()
@@ -26,7 +26,7 @@ function testprogram()
 end
 
 """
-    test_names(dir::String)
+    testnames(dir::String)
 
 List test names found under `dir`.
 
@@ -37,7 +37,7 @@ For example, if `dir` contains a file named `foo_tests.jl`, a directory named `b
 file in the `bar` directory named `baz_tests.jl`, then the list of test names would be
 `["foo", "bar/baz"]`.
 """
-function test_names(dir::String)
+function testnames(dir::String)
     tests = []
     rel = relpath(dir)
     for (root, dirs, files) in walkdir(rel)
@@ -58,7 +58,7 @@ Run tests from some or all test files in a test directory tree.
 The root of the tree is taken as the directory in which `progname` exists.
 
 The list of test names is taken from `ARGS` if `ARGS` is non-empty, otherwise from calling
-`test_names` for the root of the tree.
+`testnames` for the root of the tree.
 
 The list of test names is then used to construct test file names that are included with
 `include`, each include wrapped in its own `@testset`.
@@ -69,7 +69,7 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
         return
     end
     dir = dirname(abspath(progname))
-    desired_tests = isempty(args) ? test_names(dir) : args
+    desired_tests = isempty(args) ? testnames(dir) : args
     for test in desired_tests
         @testset "$(test) tests" begin
             include(joinpath(pwd(), dir, "$(test)_tests.jl"))

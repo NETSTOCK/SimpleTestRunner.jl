@@ -17,6 +17,6 @@ julia --project=. -e 'cd("test"); include("setup.jl"); include("runtests.jl");'
 
 # Running specific test files in various ways
 
-julia --project=. test/runtests.jl runtests test_names
+julia --project=. test/runtests.jl runtests testnames
 julia --project=. -e 'include("test/setup.jl"); include("test/runtests_tests.jl");'
-julia --project=. -e 'include("test/setup.jl"); include("test/test_names_tests.jl");'
+julia --project=. -e 'include("test/setup.jl"); include("test/testnames_tests.jl");'
