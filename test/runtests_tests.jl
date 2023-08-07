@@ -2,7 +2,7 @@
     args = String["--help"]
     buff = IOBuffer()
     progname = "test/runtests.jl"
-    runtests(@__DIR__, args; io=buff, progname=progname)
+    runtests(args; io=buff, progname=progname)
     output = String(take!(buff))
     @test contains(output, progname)
 end
@@ -16,7 +16,7 @@ end
                     write("$(test)_tests.jl", """touch("$(test)_ran.txt")""")
                 end
             end
-            runtests("test", String[]; progname="test/runtests.jl")
+            runtests(String[]; progname="test/runtests.jl")
             @test isfile("foo_ran.txt")
             @test isfile("bar_ran.txt")
             @test isfile("baz_ran.txt")
@@ -33,7 +33,7 @@ end
                     write("$(test)_tests.jl", """touch("$(test)_ran.txt")""")
                 end
             end
-            runtests("test", ["foo", "baz"]; progname="test/runtests.jl")
+            runtests(["foo", "baz"]; progname="test/runtests.jl")
             @test isfile("foo_ran.txt")
             @test !isfile("bar_ran.txt")
             @test isfile("baz_ran.txt")

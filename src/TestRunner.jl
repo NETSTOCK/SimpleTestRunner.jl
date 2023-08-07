@@ -18,23 +18,19 @@ function all_test_names(dir::String)
             push!(tests, name)
         end
     end
-    @info "All tests: $(repr(tests))"
     return tests    
 end
 
-function _progname()
-    relpath(isempty(PROGRAM_FILE) ? String(stacktrace()[4].file) : PROGRAM_FILE)
+function program_or_caller()
+    isempty(PROGRAM_FILE) ? String(stacktrace()[4].file) : PROGRAM_FILE
 end
 
-function xruntests(progname::String=_progname())
-    _progname()
-end
-
-function runtests(dir::String, args::Vector{String}=ARGS; io::IO=stdout, progname::String=_progname())
+function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=program_or_caller())
     if any(in(args), ["--help", "-h", "-?"])
         println(io, "usage: julia --project=. $(progname) [name...]")
         return
     end
+    dir = dirname(abspath(progname))
     desired_tests = isempty(args) ? all_test_names(dir) : args
     for test in desired_tests
         @testset "$(test) tests" begin
