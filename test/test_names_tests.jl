@@ -1,4 +1,4 @@
-@testset "all_test_names tests" begin
+@testset "Enumeration tests" begin
     mktempdir() do dir
         cd(dir) do
             mkdir("test")
@@ -14,7 +14,7 @@
                 end
             end
 
-            names = all_test_names("test")
+            names = test_names("test")
             expected_names = ["foo", "bar", "baz", "child/alice", "child/bob", "child/grandchild/carol"]
             for expected in expected_names
                 @test expected in names

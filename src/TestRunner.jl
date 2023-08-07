@@ -2,13 +2,13 @@ module TestRunner
 
 using Test
 
-export all_test_names, runtests
+export test_names, runtests
 
-function all_test_names()
-    all_test_names(dirname(_progname()))
+function test_names()
+    test_names(dirname(_progname()))
 end
 
-function all_test_names(dir::String)
+function test_names(dir::String)
     tests = []
     rel = relpath(dir)
     for (root, dirs, files) in walkdir(rel)
@@ -31,7 +31,7 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=pro
         return
     end
     dir = dirname(abspath(progname))
-    desired_tests = isempty(args) ? all_test_names(dir) : args
+    desired_tests = isempty(args) ? test_names(dir) : args
     for test in desired_tests
         @testset "$(test) tests" begin
             include(joinpath(pwd(), dir, "$(test)_tests.jl"))
