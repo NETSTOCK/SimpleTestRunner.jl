@@ -15,7 +15,8 @@
             end
 
             names = testnames("test")
-            expected_names = ["foo", "bar", "baz", "child/alice", "child/bob", "child/grandchild/carol"]
+	    expected_names = ["foo", "bar", "baz",
+			      joinpath("child", "alice"), joinpath("child", "bob"), joinpath("child", "grandchild", "carol")]
             for expected in expected_names
                 @test expected in names
             end
