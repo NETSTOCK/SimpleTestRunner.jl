@@ -1,8 +1,11 @@
 module SimpleTestRunner
 
-using Test
+using Reexport
+@reexport using Test
 
-export runtests, testnames, testprogram
+export runtests, testdir, testnames, testprogram
+
+include("Interactive.jl")
 
 """
     testprogram()
@@ -23,6 +26,17 @@ For example, if `test/runtests.jl` calls `runtests` and then `runtests` calls
 """
 function testprogram()
     isinteractive() || isempty(PROGRAM_FILE) ? String(stacktrace()[4].file) : PROGRAM_FILE
+end
+
+"""
+    testprogram()
+
+Identify the test directory.
+
+This is simply the relative directory name of the absolute path of `progname`.
+"""
+function testdir(progname::String=testprogram())
+    relpath(dirname(abspath(progname)))
 end
 
 """
@@ -68,7 +82,7 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
         println(io, "usage: julia --project=. $(progname) [name...]")
         return
     end
-    dir = dirname(abspath(progname))
+    dir = testdir(progname)
     desired_tests = isempty(args) ? testnames(dir) : args
     for test in desired_tests
         @testset "$(test) tests" begin

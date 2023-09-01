@@ -63,9 +63,62 @@ MyPackage tests                |   22     22  1.3s
 
 The function grew out of the [Julia Workflow for Testing Packages](https://docs.julialang.org/en/v1/stdlib/Test/#Workflow-for-Testing-Packages) documentation and Erik Engheim's article on [Julia Test Running: Best Practices](https://erikexplores.substack.com/p/julia-testing-best-pratice). So it supports a variety of workflows:
 
+* Getting Started
 * Infrequent and Correct Testing
 * Regular Slow Testing
 * Rapid Iteration Testing
+
+### Getting started
+
+The workflow for getting started is similar to Mr Engheim's approach, but adding `SimpleTestRunner` instead of `Test`:
+
+* Generate the main package
+* Create a test package nested inside it
+* Activate the test package
+* Add `SimpleTestRunner` to the test package
+* Use `SimpleTestRunner.Interactive` to create `test/setup.jl` and `test/runtests.jl`
+* Start testing
+
+```
+$ julia
+julia> using Pkg
+julia> Pkg.generate("Foo")
+  Generating  project Foo:
+    Foo/Project.toml
+    Foo/src/Foo.jl
+
+julia> cd("Foo")
+julia> mkpath("test");
+julia> cd("test")
+julia> Pkg.activate(".")
+  Activating new project at `~/git/netstock/Foo/test`
+
+julia> Pkg.add("SimpleTestRunner")
+   Resolving package versions...
+    Updating `~/git/netstock/Foo/Project.toml`
+  [4aa1efa8] + SimpleTestRunner v0.1.0
+    Updating `~/git/netstock/Foo/Manifest.toml`
+  [4aa1efa8] + SimpleTestRunner v0.1.0
+...
+Precompiling project...
+  1 dependency successfully precompiled in 1 seconds
+
+julia> using SimpleTestRunner
+[ Info: Precompiling SimpleTestRunner [4aa1efa8-8c96-46dc-bb17-447ab531c4bc]
+
+julia> SimpleTestRunner.Interactive.setup()
+[ Info: Creating ../test/setup.jl
+[ Info: Creating ../test/runtests.jl
+
+julia> cd("..")
+julia> Pkg.activate(".")
+julia> Pkg.test()
+...
+     Testing Running tests...
+Test Summary: |Time
+Foo tests     | None  0.2s
+     Testing Foo tests passed
+```
 
 ### Infrequent and Correct Testing
 
