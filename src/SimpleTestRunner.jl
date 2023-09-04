@@ -75,7 +75,7 @@ The list of test names is taken from `ARGS` if `ARGS` is non-empty, otherwise fr
 `testnames` for the root of the tree.
 
 The list of test names is then used to construct test file names that are included into
-moldule `Main` with `Base.include`, each include wrapped in its own `@testset`.
+module `Main` with `Base.include`, each include wrapped in its own `@testset`.
 """
 function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=testprogram())
     if any(in(args), ["--help", "-h", "-?"])
