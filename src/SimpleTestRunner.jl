@@ -86,7 +86,7 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
     desired_tests = isempty(args) ? testnames(dir) : args
     for test in desired_tests
         @testset "$(test) tests" begin
-            include(joinpath(pwd(), dir, "$(test)_tests.jl"))
+            Base.include(Main, joinpath(pwd(), dir, "$(test)_tests.jl"))
         end
     end
 end
