@@ -3,7 +3,7 @@ uuid = "4aa1efa8-8c96-46dc-bb17-447ab531c4bc"
 license = "MIT"
 desc = "A simple Julia test runner."
 authors = ["Sheldon Hearn <sheldon.hearn@netstock.co>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
