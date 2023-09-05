@@ -5,3 +5,6 @@ include("setup.jl")
     # include("testnames_tests.jl")
     runtests()
 end
+
+using Aqua
+Aqua.test_all(SimpleTestRunner)
