@@ -1,7 +1,5 @@
 module Interactive
 
-using Pkg
-
 """
     setup()
 
@@ -25,7 +23,7 @@ using SimpleTestRunner
 SimpleTestRunner.Interactive.setup()
 ```
 """
-function setup(pkg_path::String=Pkg.project().path)
+function setup(pkg_path::String="../Project.toml")
     pkg_name = basename(dirname(abspath(pkg_path)))
     if pkg_name == "test"
         pkg_path = abspath(joinpath(pkg_path, "..", "..", "Project.toml"))
