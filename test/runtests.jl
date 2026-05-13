@@ -1,3 +1,11 @@
+# Maintainer note:
+#
+# This repository intentionally does not include the auto-activation block that
+# Interactive.setup writes into generated test/runtests.jl files.
+#
+# Reason: this package's own test/setup.jl does `using SimpleTestRunner` from
+# the working checkout. For this repository, forcing activation of
+# test/Project.toml can hide that checkout package and break direct workflows.
 include("setup.jl")
 
 @testset verbose=true "SimpleTestRunner tests" begin
