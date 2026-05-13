@@ -52,7 +52,7 @@ function setup(pkg_name::String, pkg_path::String)
     open(runtests_file; write=true) do io
         println(io, "include(\"setup.jl\")")
         println(io)
-        println(io, "@testset \"$(pkg_name) tests\" begin")
+        println(io, "@testset verbose=true \"$(pkg_name) tests\" begin")
         println(io, "    runtests()")
         println(io, "end")
     end
