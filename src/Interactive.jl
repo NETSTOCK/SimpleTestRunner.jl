@@ -33,7 +33,7 @@ function setup(pkg_path::String="../Project.toml")
 end
 
 function setup(pkg_name::String, pkg_path::String)
-    test = joinpath(relpath(dirname(pkg_path)), "test")
+    test = test = joinpath(dirname(pkg_path), "test")
     mkpath(test)
     setup_file = joinpath(test, "setup.jl")
     @info "Creating $(setup_file)"
