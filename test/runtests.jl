@@ -6,5 +6,10 @@ include("setup.jl")
     runtests()
 end
 
-using Aqua
-Aqua.test_all(SimpleTestRunner)
+if Base.find_package("Aqua") !== nothing
+    @info "Running Aqua quality checks"
+    using Aqua
+    Aqua.test_all(SimpleTestRunner)
+else
+    @warn "Skipping Aqua quality checks (Aqua not available in active environment)"
+end
