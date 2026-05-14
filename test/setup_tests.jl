@@ -18,8 +18,9 @@
         @test contains(setup_text, "using SimpleTestRunner")
 
         runtests_text = read(runtests_path, String)
-        @test contains(runtests_text, "if isfile(test_project) && active_project !== nothing && abspath(active_project) == parent_project")
-        @test contains(runtests_text, "Pkg.activate(@__DIR__)")
+        @test contains(runtests_text, "let test_dir = @__DIR__, test_project = joinpath(@__DIR__, \"Project.toml\")")
+        @test contains(runtests_text, "if isfile(test_project) && !(test_dir in LOAD_PATH)")
+        @test contains(runtests_text, "pushfirst!(LOAD_PATH, test_dir)")
         @test contains(runtests_text, "@testset verbose=true")
         @test contains(runtests_text, "include(\"setup.jl\")")
         @test contains(runtests_text, "runtests()")

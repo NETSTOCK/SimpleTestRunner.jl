@@ -24,16 +24,17 @@ SimpleTestRunner.Interactive.setup()
 ```
 """
 function setup(pkg_path::String="../Project.toml")
-    pkg_name = basename(dirname(abspath(pkg_path)))
+    pkg_path = abspath(pkg_path)
+    pkg_name = basename(dirname(pkg_path))
     if pkg_name == "test"
         pkg_path = abspath(joinpath(pkg_path, "..", "..", "Project.toml"))
-        pkg_name = basename(dirname(abspath(pkg_path)))
+        pkg_name = basename(dirname(pkg_path))
     end
     setup(pkg_name, pkg_path)
 end
 
 function setup(pkg_name::String, pkg_path::String)
-    test = test = joinpath(dirname(pkg_path), "test")
+    test = joinpath(dirname(pkg_path), "test")
     mkpath(test)
     setup_file = joinpath(test, "setup.jl")
     @info "Creating $(setup_file)"
@@ -50,17 +51,10 @@ function setup(pkg_name::String, pkg_path::String)
     end
     @info "Creating $(runtests_file)"
     open(runtests_file; write=true) do io
-        println(io, "# If invoked as `julia --project=. test/runtests.jl`, switch to test/Project.toml")
-        println(io, "let test_project = joinpath(@__DIR__, \"Project.toml\")")
-        println(io, "    parent_project = abspath(joinpath(@__DIR__, \"..\", \"Project.toml\"))")
-        println(io, "    active_project = try")
-        println(io, "        Base.active_project()")
-        println(io, "    catch")
-        println(io, "        nothing")
-        println(io, "    end")
-        println(io, "    if isfile(test_project) && active_project !== nothing && abspath(active_project) == parent_project")
-        println(io, "        using Pkg")
-        println(io, "        Pkg.activate(@__DIR__)")
+        println(io, "# If invoked as `julia --project=. test/runtests.jl`, add test deps without replacing the active project")
+        println(io, "let test_dir = @__DIR__, test_project = joinpath(@__DIR__, \"Project.toml\")")
+        println(io, "    if isfile(test_project) && !(test_dir in LOAD_PATH)")
+        println(io, "        pushfirst!(LOAD_PATH, test_dir)")
         println(io, "    end")
         println(io, "end")
         println(io)

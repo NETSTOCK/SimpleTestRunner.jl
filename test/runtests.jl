@@ -1,11 +1,11 @@
 # Maintainer note:
 #
-# This repository intentionally does not include the auto-activation block that
-# Interactive.setup writes into generated test/runtests.jl files.
+# This repository intentionally does not include the LOAD_PATH extension block
+# that Interactive.setup writes into generated test/runtests.jl files.
 #
-# Reason: this package's own test/setup.jl does `using SimpleTestRunner` from
-# the working checkout. For this repository, forcing activation of
-# test/Project.toml can hide that checkout package and break direct workflows.
+# Reason: SimpleTestRunner is already in the active environment when developing
+# this repository, so the LOAD_PATH extension is unnecessary. Consumers putting
+# SimpleTestRunner in test/Project.toml benefit from the generated block.
 include("setup.jl")
 
 @testset verbose=true "SimpleTestRunner tests" begin

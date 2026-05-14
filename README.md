@@ -95,9 +95,9 @@ julia> Pkg.activate(".")
 
 julia> Pkg.add("SimpleTestRunner")
    Resolving package versions...
-    Updating `~/git/netstock/Foo/test/Project.toml`
+    Updating `~/git/netstock/Foo/Project.toml`
   [4aa1efa8] + SimpleTestRunner v0.1.0
-    Updating `~/git/netstock/Foo/test/Manifest.toml`
+    Updating `~/git/netstock/Foo/Manifest.toml`
   [4aa1efa8] + SimpleTestRunner v0.1.0
 ...
 Precompiling project...
@@ -124,6 +124,8 @@ Foo tests     | None  0.2s
 
 Notice that `Pkg.test()` creates an isolated, temporary environment.
 
+Use this as your correctness and CI gate, and is the official Julia recommendation for running tests.
+
 ```
 $ julia --project=. -e 'using Pkg; Pkg.test()'
 ```
@@ -142,8 +144,7 @@ $
 
 ### Regular Slow Testing
 
-Notice that this runs from the package project, while `test/runtests.jl` can auto-activate
-`test/Project.toml` when needed.
+Notice that this runs directly from the package project and is not sandbox-isolated like `Pkg.test()`.
 
 ```
 $ julia --project=. test/runtests.jl
@@ -155,12 +156,15 @@ To run a subset of test files:
 $ julia --project=. test/runtests.jl foo child/alice
 ```
 
-If your generated `test/runtests.jl` is up to date, it auto-activates
-`test/Project.toml` when Julia starts in the parent package project.
+You can also pass full test file names:
+
+```
+$ julia --project=. test/runtests.jl foo_tests.jl child/alice_tests.jl
+```
 
 ### Rapid Iteration Testing
 
-This is all about staying in and working from a single Julia REPL process to avoid Julia startup time.
+This is all about staying and working from a single Julia REPL process to avoid Julia startup time.
 
 First, install the `Revise` globally:
 
@@ -205,11 +209,12 @@ julia> include("test/setup.jl");
 julia> include("test/child/alice_tests.jl");
 ```
 
-Because of the way setup is handled, you can't run individual test files directly from the command-line.
-But remember that the runner supports command-line arguments that select the test files you want, e.g.
+You can run individual test files from the command-line by passing either mnemonic names
+or full file names to the runner, e.g.
 
 ```
 $ julia --project=. test/runtests.jl foo child/alice
+$ julia --project=. test/runtests.jl foo_tests.jl child/alice_tests.jl
 ```
 
 Individual tests are most easily run with copy and paste into the Julia REPL, again relying

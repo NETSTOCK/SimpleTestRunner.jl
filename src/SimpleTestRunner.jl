@@ -64,6 +64,10 @@ function testnames(dir::String)
     return tests
 end
 
+testfile(test::String) = endswith(test, "_tests.jl") ? test : "$(test)_tests.jl"
+
+testlabel(test::String) = endswith(test, "_tests.jl") ? test[1:end - length("_tests.jl")] : test
+
 """
     runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=testprogram())
 
@@ -85,8 +89,8 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
     dir = testdir(progname)
     desired_tests = isempty(args) ? testnames(dir) : args
     for test in desired_tests
-        @testset "$(test) tests" begin
-            Base.include(Main, joinpath(pwd(), dir, "$(test)_tests.jl"))
+        @testset "$(testlabel(test)) tests" begin
+            Base.include(Main, joinpath(pwd(), dir, testfile(test)))
         end
     end
 end
