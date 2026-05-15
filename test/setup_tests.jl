@@ -45,3 +45,24 @@ end
         @test !ispath(joinpath(dir, "test", "runtests.jl"))
     end
 end
+
+@testset "Interactive.setup uses Project.toml package name" begin
+    mktempdir() do dir
+        pkgdir = joinpath(dir, "ia-pkg-julia-rpc")
+        mkpath(joinpath(pkgdir, "src"))
+        write(joinpath(pkgdir, "Project.toml"), "name = \"RabbitRpcServer\"\n")
+        mkpath(joinpath(pkgdir, "test"))
+        touch(joinpath(pkgdir, "test", "Project.toml"))
+
+        cd(pkgdir) do
+            SimpleTestRunner.Interactive.setup()
+        end
+
+        setup_text = read(joinpath(pkgdir, "test", "setup.jl"), String)
+        runtests_text = read(joinpath(pkgdir, "test", "runtests.jl"), String)
+
+        @test contains(setup_text, "using RabbitRpcServer")
+        @test !contains(setup_text, "using ia-pkg-julia-rpc")
+        @test contains(runtests_text, "@testset verbose=true \"RabbitRpcServer tests\"")
+    end
+end

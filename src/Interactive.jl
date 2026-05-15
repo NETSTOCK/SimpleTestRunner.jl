@@ -1,6 +1,21 @@
 module Interactive
 
+using TOML
+
 const DEFAULT_PKG_PATH = joinpath("..", "Project.toml")
+
+function project_name_from_toml(pkg_path::String)
+    if !isfile(pkg_path)
+        return nothing
+    end
+    try
+        data = TOML.parsefile(pkg_path)
+        name = get(data, "name", nothing)
+        return isa(name, String) && !isempty(name) ? name : nothing
+    catch
+        return nothing
+    end
+end
 
 """
     setup()
@@ -32,11 +47,10 @@ function setup(pkg_path::String=DEFAULT_PKG_PATH)
     else
         pkg_path = abspath(pkg_path)
     end
-    pkg_name = basename(dirname(pkg_path))
-    if pkg_name == "test"
+    if basename(dirname(pkg_path)) == "test"
         pkg_path = abspath(joinpath(pkg_path, "..", "..", "Project.toml"))
-        pkg_name = basename(dirname(pkg_path))
     end
+    pkg_name = something(project_name_from_toml(pkg_path), basename(dirname(pkg_path)))
     setup(pkg_name, pkg_path)
 end
 
