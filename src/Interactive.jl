@@ -1,5 +1,7 @@
 module Interactive
 
+const DEFAULT_PKG_PATH = joinpath("..", "Project.toml")
+
 """
     setup()
 
@@ -23,8 +25,13 @@ using SimpleTestRunner
 SimpleTestRunner.Interactive.setup()
 ```
 """
-function setup(pkg_path::String="../Project.toml")
-    pkg_path = abspath(pkg_path)
+function setup(pkg_path::String=DEFAULT_PKG_PATH)
+    if normpath(pkg_path) == normpath(DEFAULT_PKG_PATH)
+        cwd_project = joinpath(abspath(pwd()), "Project.toml")
+        pkg_path = isfile(cwd_project) ? cwd_project : abspath(pkg_path)
+    else
+        pkg_path = abspath(pkg_path)
+    end
     pkg_name = basename(dirname(pkg_path))
     if pkg_name == "test"
         pkg_path = abspath(joinpath(pkg_path, "..", "..", "Project.toml"))

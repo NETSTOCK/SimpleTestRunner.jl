@@ -26,3 +26,22 @@
         @test contains(runtests_text, "runtests()")
     end
 end
+
+@testset "Interactive.setup default path from package root" begin
+    mktempdir() do dir
+        pkgdir = joinpath(dir, "DemoPkg")
+        mkpath(joinpath(pkgdir, "src"))
+        touch(joinpath(pkgdir, "Project.toml"))
+        mkpath(joinpath(pkgdir, "test"))
+        touch(joinpath(pkgdir, "test", "Project.toml"))
+
+        cd(pkgdir) do
+            SimpleTestRunner.Interactive.setup()
+        end
+
+        @test isfile(joinpath(pkgdir, "test", "setup.jl"))
+        @test isfile(joinpath(pkgdir, "test", "runtests.jl"))
+        @test !ispath(joinpath(dir, "test", "setup.jl"))
+        @test !ispath(joinpath(dir, "test", "runtests.jl"))
+    end
+end
