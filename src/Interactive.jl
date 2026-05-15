@@ -58,7 +58,10 @@ function setup(pkg_name::String, pkg_path::String)
     end
     @info "Creating $(runtests_file)"
     open(runtests_file; write=true) do io
-        println(io, "# If invoked as `julia --project=. test/runtests.jl`, add test deps without replacing the active project")
+        println(io, "# Julia 1.10 compatibility shim: when invoked from the package project,")
+        println(io, "# add test deps without replacing the active project.")
+        println(io, "# Newer Pkg features (`[sources]`, `[workspace]`) can reduce this need,")
+        println(io, "# but this keeps subset test workflows working on Julia 1.10.")
         println(io, "let test_dir = @__DIR__, test_project = joinpath(@__DIR__, \"Project.toml\")")
         println(io, "    if isfile(test_project) && !(test_dir in LOAD_PATH)")
         println(io, "        pushfirst!(LOAD_PATH, test_dir)")
