@@ -162,6 +162,12 @@ You can also pass full test file names:
 $ julia --project=. test/runtests.jl foo_tests.jl child/alice_tests.jl
 ```
 
+You can also pass test-dir-prefixed paths (useful with shell tab-completion):
+
+```
+$ julia --project=. test/runtests.jl test/foo_tests.jl test/child/alice_tests.jl
+```
+
 ### Rapid Iteration Testing
 
 This is all about staying and working from a single Julia REPL process to avoid Julia startup time.
@@ -215,6 +221,7 @@ or full file names to the runner, e.g.
 ```
 $ julia --project=. test/runtests.jl foo child/alice
 $ julia --project=. test/runtests.jl foo_tests.jl child/alice_tests.jl
+$ julia --project=. test/runtests.jl test/foo_tests.jl test/child/alice_tests.jl
 ```
 
 Individual tests are most easily run with copy and paste into the Julia REPL, again relying

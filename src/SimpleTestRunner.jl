@@ -68,6 +68,21 @@ testfile(test::String) = endswith(test, "_tests.jl") ? test : "$(test)_tests.jl"
 
 testlabel(test::String) = endswith(test, "_tests.jl") ? test[1:end - length("_tests.jl")] : test
 
+function strip_testdir_prefix(path::String, dir::String)
+    path_parts = splitpath(normpath(path))
+    dir_parts = splitpath(normpath(dir))
+    if length(path_parts) >= length(dir_parts) && path_parts[1:length(dir_parts)] == dir_parts
+        rest = path_parts[length(dir_parts) + 1:end]
+        return isempty(rest) ? "" : joinpath(rest...)
+    end
+    return path
+end
+
+function normalized_testname(test::String, dir::String)
+    normalized = strip_testdir_prefix(test, dir)
+    return endswith(normalized, "_tests.jl") ? normalized[1:end - length("_tests.jl")] : normalized
+end
+
 """
     runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=testprogram())
 
@@ -89,8 +104,9 @@ function runtests(args::Vector{String}=ARGS; io::IO=stdout, progname::String=tes
     dir = testdir(progname)
     desired_tests = isempty(args) ? testnames(dir) : args
     for test in desired_tests
-        @testset "$(testlabel(test)) tests" begin
-            Base.include(Main, joinpath(pwd(), dir, testfile(test)))
+        name = normalized_testname(test, dir)
+        @testset "$(name) tests" begin
+            Base.include(Main, joinpath(pwd(), dir, testfile(name)))
         end
     end
 end

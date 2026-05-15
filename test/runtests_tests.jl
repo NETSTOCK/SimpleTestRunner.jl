@@ -57,6 +57,23 @@ end
     end
 end
 
+@testset "test-dir-prefixed args tests" begin
+    mktempdir() do dir
+        cd(dir) do
+            mkdir("test")
+            cd("test") do
+                mkpath("child")
+                write("foo_tests.jl", """touch(\"foo_ran.txt\")""")
+                write(joinpath("child", "bar_tests.jl"), """touch(\"bar_ran.txt\")""")
+            end
+
+            runtests([joinpath("test", "foo"), joinpath("test", "child", "bar_tests.jl")]; progname=joinpath("test", "runtests.jl"))
+            @test isfile("foo_ran.txt")
+            @test isfile("bar_ran.txt")
+        end
+    end
+end
+
 @testset "filename label tests" begin
     @test SimpleTestRunner.testfile("foo") == "foo_tests.jl"
     @test SimpleTestRunner.testfile(joinpath("child", "bar")) == joinpath("child", "bar_tests.jl")
